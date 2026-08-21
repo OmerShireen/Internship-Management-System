@@ -22,7 +22,7 @@ mongoose
         console.log("MongoDB connected");
     })
     .catch((error)=>{
-        console.error("MongoDB connection failed, error")
+        console.error("MongoDB connection failed ", error)
     });
 
 const PORT = process.env.PORT || 5000;
