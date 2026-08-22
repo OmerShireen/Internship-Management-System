@@ -38,6 +38,16 @@ const userSchema = new mongoose.Schema(
         },
         startDate: {
             type: Date
+        },
+
+        deadline: {
+            type: Date
+        },
+    
+        status: {
+            type: String,
+            enum: ["active", "completed", "inactive"],
+            default: "active"
         }
     },
     {

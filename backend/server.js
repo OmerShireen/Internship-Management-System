@@ -2,19 +2,21 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 require("dotenv").config();
-
-const authRoutes = require("./routes/authRoutes")
+const authRoutes = require("./routes/authRoutes");
+const internRoutes = require("./routes/internRoutes")
 
 const app = express();
 
 //Middleware
 app.use(cors());
 app.use(express.json());
+app.use("/api/interns", internRoutes);
 
 app.use("/api/auth", authRoutes)
 app.get("/",(req,res)=>{
     res.send("Internship Management System API is running...");
 });
+
 
 mongoose
     .connect(process.env.MONGODB_URI)

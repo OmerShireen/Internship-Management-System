@@ -1,6 +1,7 @@
 const express = require("express");
 const {registerUser, loginUser} = require("../controllers/authController");
 const protect = require("../middleware/authMiddleware")
+const {getAllInterns} = require("../controllers/internController")
 
 const router = express.Router();
 
@@ -13,5 +14,7 @@ router.get("/profile", protect, (req, res) => {
         user: req.user
     });
 });
+
+router.get("/",getAllInterns);
 
 module.exports = router;
