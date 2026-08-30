@@ -110,7 +110,7 @@ const getAllSubmissions = async (req, res) => {
 // Admin reviews a submission
 const reviewSubmission = async (req, res) => {
     try {
-        const { status } = req.body;
+        const { status, feedback } = req.body;
 
         // Check if status is provided
         if (!status) {
@@ -139,6 +139,7 @@ const reviewSubmission = async (req, res) => {
 
         // Update review information
         submission.status = status;
+        submission.feedback = feedback || "";
         submission.reviewedAt = new Date();
         submission.reviewedBy = req.user.userId;
 

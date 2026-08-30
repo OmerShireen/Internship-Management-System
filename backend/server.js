@@ -11,6 +11,8 @@ const taskRoutes = require("./routes/taskRoutes")
 
 const progressRoutes = require("./routes/progressRoutes");
 
+const submissionRoutes = require("./routes/submissionRoutes") 
+
 const app = express();
 
 //Middleware
@@ -21,6 +23,7 @@ app.use("/api/interns", internRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/progress", progressRoutes);
+app.use("/api/submissions", submissionRoutes)
 
 app.get("/",(req,res)=>{
     res.send("Internship Management System API is running...");
