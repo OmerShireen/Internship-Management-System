@@ -1,6 +1,7 @@
 import { Form, Input, Button, Card, Typography, Select } from "antd"
 import { Link } from "react-router-dom"
 import styles from "./Register.module.css"
+
 const { Title, Text } = Typography
 
 function Register() {
@@ -9,17 +10,20 @@ function Register() {
   }
 
   return (
-    <div className= {styles.container }>
-      <Card className="register-card">
-        <Title level={2}>Create Account</Title>
+    <div className={styles.container}>
+      <Card className={styles.card}>
+        <Title level={2} className={styles.title}>
+          Create Account
+        </Title>
 
-        <Text type="secondary">
+        <Text type="secondary" className={styles.subtitle}>
           Register for the Internship Management System
         </Text>
 
         <Form
           layout="vertical"
           onFinish={handleSubmit}
+          className={styles.form}
         >
           <Form.Item
             label="Full Name"
@@ -116,16 +120,12 @@ function Register() {
           </Form.Item>
 
           <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              block
-            >
+            <Button type="primary" htmlType="submit" block>
               Register
             </Button>
           </Form.Item>
 
-          <div className="login-link">
+          <div className={styles.loginLink}>
             <Text>
               Already have an account?{" "}
               <Link to="/">Login here</Link>
