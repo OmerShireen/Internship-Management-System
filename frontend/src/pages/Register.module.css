@@ -1,0 +1,30 @@
+.container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .card {
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .title {
+    text-align: center;
+  }
+  
+  .subtitle {
+    display: block;
+    text-align: center;
+  }
+  
+  .form {
+    margin-top: 25px;
+  }
+  
+  .registerLink {
+    text-align: center;
+    margin-top: 10px;
+  }

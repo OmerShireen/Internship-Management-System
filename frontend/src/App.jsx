@@ -3,7 +3,7 @@ import Login from "./pages/Login"
 import Register from "./pages/Register"
 import AdminDashboard from "./pages/AdminDashboard"
 import InternDashboard from "./pages/InternDashboard"
-
+import "./App.css"
  
 
 function App() {
