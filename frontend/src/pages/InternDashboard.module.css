@@ -1,0 +1,30 @@
+.container {
+    min-height: 100vh;
+    padding: 30px;
+  }
+  
+  .header {
+    margin-bottom: 25px;
+  }
+  
+  .header h2 {
+    margin-bottom: 5px;
+  }
+  
+  .statistics {
+    margin-bottom: 20px;
+  }
+  
+  .progressCard {
+    margin-bottom: 20px;
+  }
+  
+  .progressCard :global(.ant-progress) {
+    margin-bottom: 10px;
+  }
+  
+  @media (max-width: 576px) {
+    .container {
+      padding: 15px;
+    }
+  }

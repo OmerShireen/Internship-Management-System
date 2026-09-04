@@ -8,6 +8,7 @@ import Tasks from "./pages/Tasks"
 import "./App.css"
 import Progress from "./pages/Progress"
 import Submissions from "./pages/Submissions"
+import SubmitTask from "./pages/SubmitTask"
 
 
 function App() {
@@ -48,6 +49,11 @@ function App() {
           <Route
             path="/intern-dashboard"
             element={<InternDashboard />}
+          />
+
+          <Route
+            path="/submit-task"
+            element={<SubmitTask />}
           />
         </Routes>
       </BrowserRouter>
