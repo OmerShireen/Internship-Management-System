@@ -1,12 +1,42 @@
-import { Form, Input, Button, Card, Typography, Select } from "antd"
-import { Link } from "react-router-dom"
+import {
+  Form,
+  Input,
+  Button,
+  Card,
+  Typography,
+  Select,
+  message,
+} from "antd"
+
+import { Link, useNavigate } from "react-router-dom"
+
+import api from "../api/axios"
 import styles from "./Register.module.css"
 
 const { Title, Text } = Typography
 
 function Register() {
-  const handleSubmit = (values) => {
-    console.log(values)
+  const navigate = useNavigate()
+
+  const handleSubmit = async (values) => {
+    try {
+      const response = await api.post("/auth/register", {
+        name: values.name,
+        email: values.email,
+        password: values.password,
+        university: values.university,
+        department: values.department,
+        role: values.role,
+      })
+
+      message.success(response.data.message)
+
+      navigate("/")
+    } catch (error) {
+      message.error(
+        error.response?.data?.message || "Registration failed"
+      )
+    }
   }
 
   return (
@@ -120,7 +150,11 @@ function Register() {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" block>
+            <Button
+              type="primary"
+              htmlType="submit"
+              block
+            >
               Register
             </Button>
           </Form.Item>
