@@ -9,6 +9,8 @@ import "./App.css"
 import Progress from "./pages/Progress"
 import Submissions from "./pages/Submissions"
 import SubmitTask from "./pages/SubmitTask"
+import Feedback from "./pages/Feedback"
+import ProtectedRoute from "./components/ProtectedRoute"
 
 
 function App() {
@@ -28,11 +30,21 @@ function App() {
 
           <Route
             path="/admin-dashboard"
-            element={<AdminDashboard />} />
+            element={
+              <ProtectedRoute allowedRole="admin">
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
 
           <Route
-            path="/interns"
-            element={<Interns />} />
+            path="/intern-dashboard"
+            element={
+              <ProtectedRoute allowedRole="intern">
+                <InternDashboard />
+              </ProtectedRoute>
+            }
+          />
 
           <Route
             path="/tasks"
@@ -54,6 +66,10 @@ function App() {
           <Route
             path="/submit-task"
             element={<SubmitTask />}
+          />
+          <Route
+            path="/feedback"
+            element={<Feedback />}
           />
         </Routes>
       </BrowserRouter>

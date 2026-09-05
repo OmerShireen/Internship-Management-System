@@ -1,39 +1,58 @@
-import { useState } from "react"
-import { Form, Input, Button, Card, Typography } from "antd"
-import { Link } from "react-router-dom"
+import { LockOutlined, MailOutlined } from "@ant-design/icons"
+import { Form, Input, Button, Card, Typography, message } from "antd"
+import { Link, useNavigate } from "react-router-dom"
+
+import api from "../api/axios"
 import styles from "./Login.module.css"
 
 const { Title, Text } = Typography
 
 function Login() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const navigate = useNavigate()
 
-  const handleSubmit = () => {
-    console.log({
-      email,
-      password,
-    })
+  const handleLogin = async (values) => {
+    try {
+      const response = await api.post("/auth/login", {
+        email: values.email,
+        password: values.password,
+      })
+      const { token, user } = response.data
+
+      localStorage.setItem("token", token)
+      localStorage.setItem("user", JSON.stringify(user))
+
+      message.success("Login successful!")
+
+      if (user.role === "admin") {
+        navigate("/admin-dashboard")
+      } else {
+        navigate("/intern-dashboard")
+      }
+    } catch (error) {
+      message.error(
+        error.response?.data?.message || "Login failed"
+      )
+    }
   }
 
   return (
     <div className={styles.container}>
       <Card className={styles.card}>
-        <Title level={2} className={styles.title}>
-          Internship Management System
-        </Title>
+        <div className={styles.header}>
+          <Title level={2}>Welcome Back</Title>
 
-        <Text type="secondary" className={styles.subtitle}>
-          Login to continue to your dashboard
-        </Text>
+          <Text type="secondary">
+            Login to your Internship Management System account.
+          </Text>
+        </div>
 
         <Form
           layout="vertical"
-          onFinish={handleSubmit}
-          className={styles.form}
+          onFinish={handleLogin}
         >
           <Form.Item
             label="Email"
+            name="email"
             rules={[
               {
                 required: true,
@@ -46,14 +65,14 @@ function Login() {
             ]}
           >
             <Input
+              prefix={<MailOutlined />}
               placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
             />
           </Form.Item>
 
           <Form.Item
             label="Password"
+            name="password"
             rules={[
               {
                 required: true,
@@ -62,14 +81,17 @@ function Login() {
             ]}
           >
             <Input.Password
+              prefix={<LockOutlined />}
               placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
             />
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" block>
+            <Button
+              type="primary"
+              htmlType="submit"
+              block
+            >
               Login
             </Button>
           </Form.Item>
@@ -77,7 +99,9 @@ function Login() {
           <div className={styles.registerLink}>
             <Text>
               Don't have an account?{" "}
-              <Link to="/register">Register here</Link>
+              <Link to="/register">
+                Register here
+                </Link>
             </Text>
           </div>
         </Form>
@@ -85,5 +109,6 @@ function Login() {
     </div>
   )
 }
+
 
 export default Login

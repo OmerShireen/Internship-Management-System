@@ -27,4 +27,5 @@
   .registerLink {
     text-align: center;
     margin-top: 10px;
+    cursor: pointer;
   }
