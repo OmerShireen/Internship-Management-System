@@ -1,0 +1,73 @@
+.container {
+    min-height: 100vh;
+    padding: 30px;
+  }
+  
+  .header {
+    margin-bottom: 25px;
+  }
+  
+  .header h2 {
+    margin-bottom: 5px;
+  }
+  
+  .feedbackList {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .feedbackCard {
+    width: 100%;
+  }
+  
+  .cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  
+  .taskInfo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .taskIcon {
+    font-size: 24px;
+  }
+  
+  .taskTitle {
+    margin: 0 !important;
+  }
+  
+  .feedbackContent {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #f0f0f0;
+  }
+  
+  .feedbackTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .approved {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 15px;
+  }
+  
+  @media (max-width: 576px) {
+    .container {
+      padding: 15px;
+    }
+  
+    .cardHeader {
+      flex-direction: column;
+    }
+  }
