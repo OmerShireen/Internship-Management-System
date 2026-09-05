@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
   Button,
   Card,
@@ -7,6 +7,7 @@ import {
   Table,
   Tag,
   Typography,
+  message,
 } from "antd"
 import {
   EditOutlined,
@@ -15,39 +16,37 @@ import {
   UserAddOutlined,
 } from "@ant-design/icons"
 
+import api from "../api/axios"
 import styles from "./Interns.module.css"
 
 const { Title, Text } = Typography
 
 function Interns() {
   const [searchText, setSearchText] = useState("")
+  const [interns, setInterns] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  const interns = [
-    {
-      key: "1",
-      name: "Ali Ahmed",
-      email: "ali@example.com",
-      university: "University of Karachi",
-      department: "Computer Science",
-      status: "active",
-    },
-    {
-      key: "2",
-      name: "Sara Khan",
-      email: "sara@example.com",
-      university: "NED University",
-      department: "Software Engineering",
-      status: "active",
-    },
-    {
-      key: "3",
-      name: "Ahmed Raza",
-      email: "ahmed@example.com",
-      university: "University of Karachi",
-      department: "Computer Science",
-      status: "inactive",
-    },
-  ]
+  const fetchInterns = async () => {
+    try {
+      setLoading(true)
+
+      const response = await api.get("/interns")
+
+      setInterns(response.data.interns)
+    } catch (error) {
+      message.error(
+        error.response?.data?.message ||
+        "Failed to fetch interns"
+      )
+    } finally {
+      setLoading(false)
+    }
+  }
+  
+  useEffect(()=> {
+    fetchInterns()
+  },[]) 
+
 
   const filteredInterns = interns.filter((intern) =>
     intern.name.toLowerCase().includes(searchText.toLowerCase())
@@ -80,7 +79,7 @@ function Interns() {
       key: "status",
       render: (status) => (
         <Tag color={status === "active" ? "green" : "red"}>
-          {status.toUpperCase()}
+          {status?.toUpperCase() || "ACTIVE"}
         </Tag>
       ),
     },
@@ -99,6 +98,7 @@ function Interns() {
           <Button
             danger
             icon={<StopOutlined />}
+            disabled={record.status === "inactive"}
             onClick={() => console.log("Deactivate:", record)}
           >
             Deactivate
