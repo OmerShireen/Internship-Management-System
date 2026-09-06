@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react"
+
 import {
   Button,
   Card,
+  Form,
   Input,
+  message,
+  Modal,
+  Select,
   Space,
   Table,
   Tag,
   Typography,
-  message,
 } from "antd"
+
 import {
   EditOutlined,
   SearchOutlined,
@@ -26,6 +31,11 @@ function Interns() {
   const [interns, setInterns] = useState([])
   const [loading, setLoading] = useState(true)
 
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedIntern, setSelectedIntern] = useState(null)
+
+  const [form] = Form.useForm()
+
   const fetchInterns = async () => {
     try {
       setLoading(true)
@@ -36,20 +46,101 @@ function Interns() {
     } catch (error) {
       message.error(
         error.response?.data?.message ||
-        "Failed to fetch interns"
+          "Failed to fetch interns"
       )
     } finally {
       setLoading(false)
     }
   }
-  
-  useEffect(()=> {
-    fetchInterns()
-  },[]) 
 
+  useEffect(() => {
+    fetchInterns()
+  }, [])
+
+  const handleDeactivate = async (intern) => {
+    try {
+      await api.patch(`/interns/${intern._id}/status`)
+
+      message.success("Intern deactivated successfully")
+
+      setInterns((previousInterns) =>
+        previousInterns.map((item) =>
+          item._id === intern._id
+            ? { ...item, status: "inactive" }
+            : item
+        )
+      )
+    } catch (error) {
+      message.error(
+        error.response?.data?.message ||
+          "Failed to deactivate intern"
+      )
+    }
+  }
+
+  const handleEdit = (intern) => {
+    setSelectedIntern(intern)
+
+    form.setFieldsValue({
+      name: intern.name,
+      email: intern.email,
+      university: intern.university,
+      department: intern.department,
+      status: intern.status,
+    })
+
+    setIsModalOpen(true)
+  }
+
+  const handleUpdate = async (values) => {
+    try {
+      const response = await api.put(
+        `/interns/${selectedIntern._id}`,
+        values
+      )
+
+      message.success(
+        response.data.message ||
+          "Intern updated successfully"
+      )
+
+      setInterns((previousInterns) =>
+        previousInterns.map((intern) =>
+          intern._id === selectedIntern._id
+            ? {
+                ...intern,
+                ...response.data.intern,
+                _id: selectedIntern._id,
+              }
+            : intern
+        )
+      )
+
+      setIsModalOpen(false)
+
+      setSelectedIntern(null)
+
+      form.resetFields()
+    } catch (error) {
+      message.error(
+        error.response?.data?.message ||
+          "Failed to update intern"
+      )
+    }
+  }
+
+  const handleCancel = () => {
+    setIsModalOpen(false)
+
+    setSelectedIntern(null)
+
+    form.resetFields()
+  }
 
   const filteredInterns = interns.filter((intern) =>
-    intern.name.toLowerCase().includes(searchText.toLowerCase())
+    intern.name
+      .toLowerCase()
+      .includes(searchText.toLowerCase())
   )
 
   const columns = [
@@ -90,7 +181,7 @@ function Interns() {
         <Space>
           <Button
             icon={<EditOutlined />}
-            onClick={() => console.log("Edit:", record)}
+            onClick={() => handleEdit(record)}
           >
             Edit
           </Button>
@@ -99,7 +190,7 @@ function Interns() {
             danger
             icon={<StopOutlined />}
             disabled={record.status === "inactive"}
-            onClick={() => console.log("Deactivate:", record)}
+            onClick={() => handleDeactivate(record)}
           >
             Deactivate
           </Button>
@@ -141,12 +232,87 @@ function Interns() {
         <Table
           columns={columns}
           dataSource={filteredInterns}
+          rowKey="_id"
+          loading={loading}
           pagination={{
             pageSize: 5,
           }}
           scroll={{ x: true }}
         />
       </Card>
+
+      <Modal
+        title="Edit Intern"
+        open={isModalOpen}
+        onCancel={handleCancel}
+        onOk={() => form.submit()}
+        okText="Save Changes"
+      >
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleUpdate}
+        >
+          <Form.Item
+            label="Full Name"
+            name="name"
+            rules={[
+              {
+                required: true,
+                message: "Please enter the intern's name",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[
+              {
+                required: true,
+                message: "Please enter the intern's email",
+              },
+              {
+                type: "email",
+                message: "Please enter a valid email",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="University"
+            name="university"
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="Department"
+            name="department"
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="Status"
+            name="status"
+          >
+            <Select>
+              <Select.Option value="active">
+                Active
+              </Select.Option>
+
+              <Select.Option value="inactive">
+                Inactive
+              </Select.Option>
+            </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   )
 }

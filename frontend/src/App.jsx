@@ -38,13 +38,8 @@ function App() {
           />
 
           <Route
-            path="/intern-dashboard"
-            element={
-              <ProtectedRoute allowedRole="intern">
-                <InternDashboard />
-              </ProtectedRoute>
-            }
-          />
+            path="/interns"
+            element={<Interns />} />
 
           <Route
             path="/tasks"
@@ -60,7 +55,11 @@ function App() {
 
           <Route
             path="/intern-dashboard"
-            element={<InternDashboard />}
+            element={
+              <ProtectedRoute allowedRole="intern">
+                <InternDashboard />
+              </ProtectedRoute>
+            }
           />
 
           <Route
