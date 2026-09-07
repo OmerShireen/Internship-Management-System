@@ -31,10 +31,15 @@ function Interns() {
   const [interns, setInterns] = useState([])
   const [loading, setLoading] = useState(true)
 
+  // Edit modal
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedIntern, setSelectedIntern] = useState(null)
 
+  // Add modal
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+
   const [form] = Form.useForm()
+  const [addForm] = Form.useForm()
 
   const fetchInterns = async () => {
     try {
@@ -57,11 +62,61 @@ function Interns() {
     fetchInterns()
   }, [])
 
+  // =========================
+  // ADD INTERN
+  // =========================
+
+  const handleAddIntern = async (values) => {
+    try {
+      const response = await api.post(
+        "/auth/register",
+        {
+          name: values.name,
+          email: values.email,
+          password: values.password,
+          university: values.university,
+          department: values.department,
+          role: "intern",
+        }
+      )
+
+      message.success(
+        response.data.message ||
+          "Intern added successfully"
+      )
+
+      setIsAddModalOpen(false)
+
+      addForm.resetFields()
+
+      fetchInterns()
+    } catch (error) {
+      message.error(
+        error.response?.data?.message ||
+          "Failed to add intern"
+      )
+    }
+  }
+
+  const handleAddCancel = () => {
+    setIsAddModalOpen(false)
+
+    addForm.resetFields()
+  }
+
+  // =========================
+  // DEACTIVATE INTERN
+  // =========================
+
   const handleDeactivate = async (intern) => {
     try {
-      await api.patch(`/interns/${intern._id}/status`)
+      await api.patch(
+        `/interns/${intern._id}/status`
+      )
 
-      message.success("Intern deactivated successfully")
+      message.success(
+        "Intern deactivated successfully"
+      )
 
       setInterns((previousInterns) =>
         previousInterns.map((item) =>
@@ -77,6 +132,10 @@ function Interns() {
       )
     }
   }
+
+  // =========================
+  // EDIT INTERN
+  // =========================
 
   const handleEdit = (intern) => {
     setSelectedIntern(intern)
@@ -137,11 +196,19 @@ function Interns() {
     form.resetFields()
   }
 
+  // =========================
+  // SEARCH
+  // =========================
+
   const filteredInterns = interns.filter((intern) =>
     intern.name
       .toLowerCase()
       .includes(searchText.toLowerCase())
   )
+
+  // =========================
+  // TABLE COLUMNS
+  // =========================
 
   const columns = [
     {
@@ -149,34 +216,47 @@ function Interns() {
       dataIndex: "name",
       key: "name",
     },
+
     {
       title: "Email",
       dataIndex: "email",
       key: "email",
     },
+
     {
       title: "University",
       dataIndex: "university",
       key: "university",
     },
+
     {
       title: "Department",
       dataIndex: "department",
       key: "department",
     },
+
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
+
       render: (status) => (
-        <Tag color={status === "active" ? "green" : "red"}>
+        <Tag
+          color={
+            status === "active"
+              ? "green"
+              : "red"
+          }
+        >
           {status?.toUpperCase() || "ACTIVE"}
         </Tag>
       ),
     },
+
     {
       title: "Actions",
       key: "actions",
+
       render: (_, record) => (
         <Space>
           <Button
@@ -189,8 +269,12 @@ function Interns() {
           <Button
             danger
             icon={<StopOutlined />}
-            disabled={record.status === "inactive"}
-            onClick={() => handleDeactivate(record)}
+            disabled={
+              record.status === "inactive"
+            }
+            onClick={() =>
+              handleDeactivate(record)
+            }
           >
             Deactivate
           </Button>
@@ -201,9 +285,13 @@ function Interns() {
 
   return (
     <div className={styles.container}>
+      {/* HEADER */}
+
       <div className={styles.header}>
         <div>
-          <Title level={2}>Intern Management</Title>
+          <Title level={2}>
+            Intern Management
+          </Title>
 
           <Text type="secondary">
             Manage and monitor all interns.
@@ -213,10 +301,15 @@ function Interns() {
         <Button
           type="primary"
           icon={<UserAddOutlined />}
+          onClick={() =>
+            setIsAddModalOpen(true)
+          }
         >
           Add Intern
         </Button>
       </div>
+
+      {/* INTERN TABLE */}
 
       <Card>
         <div className={styles.toolbar}>
@@ -224,7 +317,9 @@ function Interns() {
             placeholder="Search intern by name"
             prefix={<SearchOutlined />}
             value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
+            onChange={(e) =>
+              setSearchText(e.target.value)
+            }
             className={styles.searchInput}
           />
         </div>
@@ -240,6 +335,94 @@ function Interns() {
           scroll={{ x: true }}
         />
       </Card>
+
+      {/* =========================
+          ADD INTERN MODAL
+          ========================= */}
+
+      <Modal
+        title="Add Intern"
+        open={isAddModalOpen}
+        onCancel={handleAddCancel}
+        onOk={() => addForm.submit()}
+        okText="Add Intern"
+      >
+        <Form
+          form={addForm}
+          layout="vertical"
+          onFinish={handleAddIntern}
+        >
+          <Form.Item
+            label="Full Name"
+            name="name"
+            rules={[
+              {
+                required: true,
+                message:
+                  "Please enter the intern's name",
+              },
+            ]}
+          >
+            <Input placeholder="Enter full name" />
+          </Form.Item>
+
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[
+              {
+                required: true,
+                message:
+                  "Please enter the intern's email",
+              },
+              {
+                type: "email",
+                message:
+                  "Please enter a valid email",
+              },
+            ]}
+          >
+            <Input placeholder="Enter email" />
+          </Form.Item>
+
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[
+              {
+                required: true,
+                message:
+                  "Please enter a password",
+              },
+              {
+                min: 6,
+                message:
+                  "Password must be at least 6 characters",
+              },
+            ]}
+          >
+            <Input.Password placeholder="Enter password" />
+          </Form.Item>
+
+          <Form.Item
+            label="University"
+            name="university"
+          >
+            <Input placeholder="Enter university" />
+          </Form.Item>
+
+          <Form.Item
+            label="Department"
+            name="department"
+          >
+            <Input placeholder="Enter department" />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* =========================
+          EDIT INTERN MODAL
+          ========================= */}
 
       <Modal
         title="Edit Intern"
@@ -259,7 +442,8 @@ function Interns() {
             rules={[
               {
                 required: true,
-                message: "Please enter the intern's name",
+                message:
+                  "Please enter the intern's name",
               },
             ]}
           >
@@ -272,11 +456,13 @@ function Interns() {
             rules={[
               {
                 required: true,
-                message: "Please enter the intern's email",
+                message:
+                  "Please enter the intern's email",
               },
               {
                 type: "email",
-                message: "Please enter a valid email",
+                message:
+                  "Please enter a valid email",
               },
             ]}
           >
