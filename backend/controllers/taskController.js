@@ -147,6 +147,34 @@ const updateTaskStatus = async (req, res) => {
     }
 };
 
+const updateTask = async (req, res) => {
+    try {
+        const { title, description, assignedTo, deadline } = req.body;
+
+        const task = await Task.findById(req.params.id);
+
+        if (!task) {
+            return res.status(404).json({ message: "Task not found" });
+        }
+
+        if (title) task.title = title;
+        if (description) task.description = description;
+        if (assignedTo) task.assignedTo = assignedTo;
+        if (deadline) task.deadline = deadline;
+
+        await task.save();
+
+        res.status(200).json({
+            message: "Task updated successfully",
+            task
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+ 
 const deleteTask = async (req, res) => {
     try{
         const task = await Task.findById(req.params.id);
@@ -177,5 +205,6 @@ module.exports = {
     getAllTasks,
     getMyTasks,
     updateTaskStatus,
+    updateTask,
     deleteTask 
 };

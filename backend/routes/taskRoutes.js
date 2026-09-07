@@ -5,6 +5,7 @@ const {
     getAllTasks,
     getMyTasks,
     updateTaskStatus,
+    updateTask,
     deleteTask
 } = require("../controllers/taskController");
 
@@ -19,6 +20,8 @@ router.get("/", protect, admin, getAllTasks);
 router.get("/my", protect, getMyTasks);
 
 router.patch("/:id/status", protect, updateTaskStatus);
+
+router.put("/:id", protect, admin, updateTask);
 
 router.delete("/:id", protect, admin, deleteTask);
 
