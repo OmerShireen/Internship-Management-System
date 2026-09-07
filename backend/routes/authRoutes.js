@@ -15,6 +15,6 @@ router.get("/profile", protect, (req, res) => {
     });
 });
 
-router.get("/",getAllInterns);
+ 
 
 module.exports = router;
