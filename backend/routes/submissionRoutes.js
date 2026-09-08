@@ -1,23 +1,20 @@
-const express = require("express");
+const express = require("express")
 
 const {
-    submitTaskWork,
-    getMySubmissions,
-    getAllSubmissions,
-    reviewSubmission
-} = require("../controllers/submissionController");
+  createSubmission,
+  getMySubmissions,
+  getAllSubmissions,
+} = require("../controllers/submissionController")
 
-const protect = require("../middleware/authMiddleware");
-
+const protect = require("../middleware/authMiddleware")
 const admin = require("../middleware/adminMiddleware")
-const router = express.Router();
 
-router.post("/", protect, submitTaskWork);
+const router = express.Router()
 
-router.get("/",protect, admin, getAllSubmissions);
+router.post("/", protect, createSubmission)
 
-router.get("/my", protect, getMySubmissions);
+router.get("/my", protect, getMySubmissions)
 
-router.patch("/:id/review", protect, admin, reviewSubmission)
+router.get("/", protect, admin, getAllSubmissions)
 
-module.exports = router;
+module.exports = router

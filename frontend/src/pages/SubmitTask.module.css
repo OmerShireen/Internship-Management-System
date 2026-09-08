@@ -1,43 +1,38 @@
 .container {
-    min-height: 100vh;
-    padding: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  min-height: 100vh;
+  padding: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.card {
+  width: 100%;
+  max-width: 700px;
+}
+
+.backButton {
+  margin-bottom: 20px;
+}
+
+.header {
+  margin-bottom: 30px;
+}
+
+.header h2 {
+  margin-bottom: 5px;
+}
+
+.form {
+  width: 100%;
+}
+
+.submitButton {
+  margin-top: 10px;
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 15px;
   }
-  
-  .card {
-    width: 100%;
-    max-width: 600px;
-  }
-  
-  .backButton {
-    margin-bottom: 20px;
-  }
-  
-  .header {
-    margin-bottom: 25px;
-  }
-  
-  .header h2 {
-    margin-bottom: 5px;
-  }
-  
-  .form {
-    margin-top: 20px;
-  }
-  
-  .submitButton {
-    margin-top: 10px;
-  }
-  
-  @media (max-width: 576px) {
-    .container {
-      padding: 15px;
-      align-items: flex-start;
-    }
-  
-    .card {
-      margin-top: 20px;
-    }
-  }
+}
