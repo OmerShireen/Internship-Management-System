@@ -1,22 +1,48 @@
 .container {
-    min-height: 100vh;
-    padding: 30px;
+  min-height: 100vh;
+  padding: 30px;
+}
+
+.header {
+  margin-bottom: 25px;
+}
+
+.header h2 {
+  margin-bottom: 5px;
+}
+
+.statistics {
+  margin-bottom: 25px;
+}
+
+.statistic {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.statIcon {
+  font-size: 28px;
+}
+
+.statistic h3 {
+  margin: 5px 0 0;
+}
+
+.tableCard {
+  margin-bottom: 25px;
+}
+
+.progressCell {
+  min-width: 220px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
   }
-  
-  .header {
-    margin-bottom: 25px;
+
+  .progressCell {
+    min-width: 180px;
   }
-  
-  .header h2 {
-    margin-bottom: 5px;
-  }
-  
-  .statistics {
-    margin-bottom: 20px;
-  }
-  
-  @media (max-width: 576px) {
-    .container {
-      padding: 15px;
-    }
-  }
+}

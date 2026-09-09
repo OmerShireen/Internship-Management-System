@@ -47,7 +47,12 @@ function App() {
 
           <Route
             path="/progress"
-            element={<Progress />} />
+            element={
+              <ProtectedRoute allowedRole="admin">
+                <Progress />
+              </ProtectedRoute>
+            }
+          />
 
           <Route
             path="/submissions"
