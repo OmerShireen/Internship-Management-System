@@ -11,6 +11,7 @@ import Submissions from "./pages/Submissions"
 import SubmitTask from "./pages/SubmitTask"
 import Feedback from "./pages/Feedback"
 import ProtectedRoute from "./components/ProtectedRoute"
+import InternDetail from "./pages/InternDetail"
 
 
 function App() {
@@ -40,6 +41,15 @@ function App() {
           <Route
             path="/interns"
             element={<Interns />} />
+
+          <Route
+            path="/interns/:id"
+            element={
+              <ProtectedRoute allowedRole="admin">
+                <InternDetail/> 
+              </ProtectedRoute>
+            }
+          />
 
           <Route
             path="/tasks"

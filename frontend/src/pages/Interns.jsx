@@ -23,14 +23,14 @@ import {
 
 import api from "../api/axios"
 import styles from "./Interns.module.css"
-
+import { useNavigate } from "react-router-dom"
 const { Title, Text } = Typography
 
 function Interns() {
   const [searchText, setSearchText] = useState("")
   const [interns, setInterns] = useState([])
   const [loading, setLoading] = useState(true)
-
+  const navigate = useNavigate()
   // Edit modal
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedIntern, setSelectedIntern] = useState(null)
@@ -252,29 +252,26 @@ function Interns() {
         </Tag>
       ),
     },
-
     {
       title: "Actions",
       key: "actions",
-
       render: (_, record) => (
         <Space>
           <Button
-            icon={<EditOutlined />}
-            onClick={() => handleEdit(record)}
+            type="default"
+            onClick={() => navigate(`/interns/${record._id}`)}
           >
+            View
+          </Button>
+    
+          <Button onClick={() => handleEdit(record)}>
             Edit
           </Button>
-
+    
           <Button
             danger
-            icon={<StopOutlined />}
-            disabled={
-              record.status === "inactive"
-            }
-            onClick={() =>
-              handleDeactivate(record)
-            }
+            onClick={() => handleDeactivate(record._id)}
+            disabled={record.status === "inactive"}
           >
             Deactivate
           </Button>
