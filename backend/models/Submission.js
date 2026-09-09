@@ -25,6 +25,11 @@ const submissionSchema = new mongoose.Schema(
       trim: true,
     },
 
+    feedback: {
+      type: String,
+      trim: true,
+    },
+
     status: {
       type: String,
       enum: ["pending", "approved", "rejected"],
@@ -36,4 +41,7 @@ const submissionSchema = new mongoose.Schema(
   }
 )
 
-module.exports = mongoose.model("Submission", submissionSchema)
+module.exports = mongoose.model(
+  "Submission",
+  submissionSchema
+)
