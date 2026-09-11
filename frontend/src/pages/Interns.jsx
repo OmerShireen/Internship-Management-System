@@ -69,7 +69,7 @@ function Interns() {
   const handleAddIntern = async (values) => {
     try {
       const response = await api.post(
-        "/auth/register",
+        "/interns",
         {
           name: values.name,
           email: values.email,

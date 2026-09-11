@@ -1,14 +1,31 @@
-const express = require("express");
-const {getAllInterns, getInternById, updateIntern, deactivateIntern} = require("../controllers/internController");
+const express = require("express")
+
+const {
+  createIntern,
+  getAllInterns,
+  getInternById,
+  updateIntern,
+  deactivateIntern,
+} = require("../controllers/internController")
 
 const protect = require("../middleware/authMiddleware")
 const admin = require("../middleware/adminMiddleware")
 
-const router = express.Router();
+const router = express.Router()
 
-router.get("/", protect, admin,  getAllInterns); 
-router.get("/:id", protect, getInternById); 
-router.put("/:id", protect, updateIntern); 
-router.patch("/:id/status", protect, deactivateIntern); 
+// Admin can create an intern
+router.post("/", protect, admin, createIntern)
 
-module.exports = router;
+// Admin can view all interns
+router.get("/", protect, admin, getAllInterns)
+
+// Authenticated user can view an intern
+router.get("/:id", protect, getInternById)
+
+// Authenticated user can update an intern
+router.put("/:id", protect, updateIntern)
+
+// Authenticated user can deactivate an intern
+router.patch("/:id/status", protect, deactivateIntern)
+
+module.exports = router
