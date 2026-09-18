@@ -1,38 +1,50 @@
 .container {
   min-height: 100vh;
   padding: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-}
-
-.card {
-  width: 100%;
-  max-width: 700px;
-}
-
-.backButton {
-  margin-bottom: 20px;
 }
 
 .header {
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 }
 
 .header h2 {
   margin-bottom: 5px;
 }
 
-.form {
-  width: 100%;
+.statistics {
+  margin-bottom: 25px;
 }
 
-.submitButton {
-  margin-top: 10px;
+.progressCard {
+  margin-bottom: 25px;
 }
 
-@media (max-width: 576px) {
+.progressCard .ant-progress {
+  margin-bottom: 10px;
+}
+
+@media (max-width: 991px) {
+  .container {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 767px) {
   .container {
     padding: 15px;
+  }
+
+  .header {
+    margin-bottom: 20px;
+  }
+
+  .progressCard {
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 575px) {
+  .container {
+    padding: 12px;
   }
 }

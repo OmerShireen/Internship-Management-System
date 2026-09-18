@@ -27,8 +27,28 @@
   line-height: 2;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 991px) {
+  .container {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 767px) {
   .container {
     padding: 15px;
+  }
+
+  .cardHeader {
+    align-items: flex-start;
+  }
+
+  .submissionInfo {
+    line-height: 1.7;
+  }
+}
+
+@media (max-width: 575px) {
+  .container {
+    padding: 12px;
   }
 }

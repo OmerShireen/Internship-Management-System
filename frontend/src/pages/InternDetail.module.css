@@ -1,113 +1,146 @@
 .container {
-    min-height: 100vh;
-    padding: 30px;
+  min-height: 100vh;
+  padding: 30px;
+}
+
+.loading {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.backButton {
+  margin-bottom: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.header h2 {
+  margin-bottom: 5px;
+}
+
+.profileCard {
+  margin-bottom: 30px;
+}
+
+.profileHeader {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.avatar {
+  width: 70px;
+  height: 70px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f0f0f0;
+  font-size: 30px;
+}
+
+.name {
+  margin-bottom: 5px !important;
+}
+
+.sectionTitle {
+  margin-bottom: 20px !important;
+}
+
+.statistics {
+  margin-bottom: 25px;
+}
+
+.progressCard {
+  margin-bottom: 25px;
+}
+
+.progressHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.progressHeader h4 {
+  margin-bottom: 5px;
+}
+
+.taskList {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.taskItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+}
+
+@media (max-width: 991px) {
+  .container {
+    padding: 20px;
   }
-  
-  .loading {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .backButton {
-    margin-bottom: 20px;
-  }
-  
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-  }
-  
-  .header h2 {
-    margin-bottom: 5px;
-  }
-  
-  .profileCard {
-    margin-bottom: 30px;
-  }
-  
-  .profileHeader {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 30px;
-  }
-  
-  .avatar {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #f0f0f0;
-    font-size: 30px;
-  }
-  
-  .name {
-    margin-bottom: 5px !important;
-  }
-  
-  .sectionTitle {
-    margin-bottom: 20px !important;
-  }
-  
-  .statistics {
-    margin-bottom: 25px;
-  }
-  
-  .progressCard {
-    margin-bottom: 25px;
-  }
-  
-  .progressHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-  
-  .progressHeader h4 {
-    margin-bottom: 5px;
-  }
-  
-  .taskList {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 20px;
-  }
-  
-  .taskItem {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+}
+
+@media (max-width: 767px) {
+  .container {
     padding: 15px;
-    border: 1px solid #f0f0f0;
-    border-radius: 8px;
   }
-  
-  @media (max-width: 768px) {
-    .container {
-      padding: 15px;
-    }
-  
-    .header {
-      align-items: flex-start;
-      gap: 15px;
-      flex-direction: column;
-    }
-  
-    .profileHeader {
-      align-items: flex-start;
-    }
-  
-    .taskItem {
-      align-items: flex-start;
-      gap: 15px;
-      flex-direction: column;
-    }
+
+  .header {
+    align-items: flex-start;
+    flex-direction: column;
   }
+
+  .profileHeader {
+    align-items: flex-start;
+  }
+
+  .progressHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .taskItem {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 575px) {
+  .container {
+    padding: 12px;
+  }
+
+  .profileHeader {
+    gap: 12px;
+  }
+
+  .avatar {
+    width: 55px;
+    height: 55px;
+    font-size: 24px;
+  }
+
+  .taskItem {
+    padding: 12px;
+  }
+}
