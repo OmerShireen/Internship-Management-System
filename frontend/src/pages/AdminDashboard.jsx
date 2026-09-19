@@ -1,13 +1,13 @@
 import {
-  Layout,
   Card,
-  Statistic,
-  Row,
   Col,
-  Typography,
+  Layout,
   Menu,
+  Row,
+  Statistic,
+  Typography,
+  message,
 } from "antd"
-
 import {
   TeamOutlined,
   CheckCircleOutlined,
@@ -18,9 +18,9 @@ import {
   BarChartOutlined,
   MessageOutlined,
 } from "@ant-design/icons"
-
-import { useNavigate, useLocation } from "react-router-dom"
-
+import { useEffect, useState } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
+import api from "../api/axios"
 import styles from "./AdminDashboard.module.css"
 
 const { Header, Sider, Content } = Layout
@@ -29,6 +29,65 @@ const { Title, Text } = Typography
 function AdminDashboard() {
   const navigate = useNavigate()
   const location = useLocation()
+
+  const [stats, setStats] = useState({
+    totalInterns: 0,
+    activeInterns: 0,
+    completedTasks: 0,
+    pendingTasks: 0,
+    totalSubmissions: 0,
+  })
+
+  const [loading, setLoading] = useState(true)
+
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true)
+
+      const [internsResponse, tasksResponse, submissionsResponse] =
+        await Promise.all([
+          api.get("/interns"),
+          api.get("/tasks"),
+          api.get("/submissions"),
+        ])
+
+      const interns = internsResponse.data.interns || []
+      const tasks = tasksResponse.data.tasks || []
+      const submissions = submissionsResponse.data.submissions || []
+
+      const activeInterns = interns.filter(
+        (intern) => intern.status === "active"
+      ).length
+
+      const completedTasks = tasks.filter(
+        (task) => task.status === "completed"
+      ).length
+
+      const pendingTasks = tasks.filter(
+        (task) =>
+          task.status === "pending" || task.status === "in-progress"
+      ).length
+
+      setStats({
+        totalInterns: interns.length,
+        activeInterns,
+        completedTasks,
+        pendingTasks,
+        totalSubmissions: submissions.length,
+      })
+    } catch (error) {
+      message.error(
+        error.response?.data?.message ||
+          "Failed to load dashboard statistics"
+      )
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchDashboardData()
+  }, [])
 
   const menuItems = [
     {
@@ -61,9 +120,7 @@ function AdminDashboard() {
   return (
     <Layout className={styles.layout}>
       <Sider breakpoint="lg" collapsedWidth="0">
-        <div className={styles.logo}>
-          IMS Admin
-        </div>
+        <div className={styles.logo}>IMS Admin</div>
 
         <Menu
           theme="dark"
@@ -88,12 +145,16 @@ function AdminDashboard() {
         </Header>
 
         <Content className={styles.content}>
-          <Row gutter={[20, 20]}>
+          <Row
+            gutter={[20, 20]}
+            className={styles.statistics}
+          >
             <Col xs={24} sm={12} lg={6}>
               <Card>
                 <Statistic
                   title="Total Interns"
-                  value={0}
+                  value={stats.totalInterns}
+                  loading={loading}
                   prefix={<TeamOutlined />}
                 />
               </Card>
@@ -102,9 +163,10 @@ function AdminDashboard() {
             <Col xs={24} sm={12} lg={6}>
               <Card>
                 <Statistic
-                  title="Total Tasks"
-                  value={0}
-                  prefix={<FileTextOutlined />}
+                  title="Active Interns"
+                  value={stats.activeInterns}
+                  loading={loading}
+                  prefix={<UserOutlined />}
                 />
               </Card>
             </Col>
@@ -113,7 +175,8 @@ function AdminDashboard() {
               <Card>
                 <Statistic
                   title="Completed Tasks"
-                  value={0}
+                  value={stats.completedTasks}
+                  loading={loading}
                   prefix={<CheckCircleOutlined />}
                 />
               </Card>
@@ -123,62 +186,71 @@ function AdminDashboard() {
               <Card>
                 <Statistic
                   title="Pending Tasks"
-                  value={0}
+                  value={stats.pendingTasks}
+                  loading={loading}
                   prefix={<ClockCircleOutlined />}
                 />
               </Card>
             </Col>
           </Row>
 
-          <Row
-            gutter={[20, 20]}
-            className={styles.bottomSection}
-          >
+          <Row gutter={[20, 20]}>
             <Col xs={24} lg={12}>
-              <Card title="Quick Actions">
-                <div className={styles.quickActions}>
-                  <Card
-                    size="small"
-                    hoverable
-                    onClick={() => navigate("/interns")}
-                  >
-                    Manage Interns
-                  </Card>
+              <Card
+                title="Submissions"
+                className={styles.quickCard}
+              >
+                <Statistic
+                  title="Total Submissions"
+                  value={stats.totalSubmissions}
+                  loading={loading}
+                  prefix={<MessageOutlined />}
+                />
 
-                  <Card
-                    size="small"
-                    hoverable
-                    onClick={() => navigate("/tasks")}
-                  >
-                    Manage Tasks
-                  </Card>
-
-                  <Card
-                    size="small"
-                    hoverable
-                    onClick={() => navigate("/progress")}
-                  >
-                    View Progress
-                  </Card>
-
-                  <Card
-                    size="small"
-                    hoverable
-                    onClick={() => navigate("/submissions")}
-                  >
-                    Review Submissions
-                  </Card>
-                </div>
+                <Text type="secondary">
+                  View and review intern submissions.
+                </Text>
               </Card>
             </Col>
 
             <Col xs={24} lg={12}>
-              <Card title="Dashboard Overview">
-                <p>
-                  Use this dashboard to manage interns,
-                  create tasks, review submissions, and
-                  track overall intern progress.
-                </p>
+              <Card
+                title="Quick Actions"
+                className={styles.quickCard}
+              >
+                <div className={styles.actions}>
+                  <Card
+                    hoverable
+                    onClick={() => navigate("/interns")}
+                  >
+                    <UserOutlined />
+                    <span>Manage Interns</span>
+                  </Card>
+
+                  <Card
+                    hoverable
+                    onClick={() => navigate("/tasks")}
+                  >
+                    <FileTextOutlined />
+                    <span>Manage Tasks</span>
+                  </Card>
+
+                  <Card
+                    hoverable
+                    onClick={() => navigate("/progress")}
+                  >
+                    <BarChartOutlined />
+                    <span>View Progress</span>
+                  </Card>
+
+                  <Card
+                    hoverable
+                    onClick={() => navigate("/submissions")}
+                  >
+                    <MessageOutlined />
+                    <span>Review Submissions</span>
+                  </Card>
+                </div>
               </Card>
             </Col>
           </Row>

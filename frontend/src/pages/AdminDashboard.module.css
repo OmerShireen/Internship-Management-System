@@ -11,41 +11,42 @@
   font-size: 20px;
   font-weight: 600;
 }
-
+ 
 .header {
   height: auto;
   min-height: 80px;
+  background: white;
   padding: 16px 24px;
   display: flex;
   align-items: center;
-  background: white;
 }
 
 .headerTitle {
-  margin-bottom: 4px !important;
+  margin-bottom: 5px !important;
 }
 
 .content {
-  padding: 24px;
-  background: #f5f5f5;
+  padding: 30px;
 }
 
-.quickActions {
-  margin-top: 20px;
+.statistics {
+  margin-bottom: 25px;
 }
 
-.actionCard {
+.quickCard {
   height: 100%;
-  cursor: pointer;
-  transition: transform 0.2s ease;
 }
 
-.actionCard:hover {
-  transform: translateY(-3px);
+.actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
 }
 
-.overviewCard {
-  height: 100%;
+.actions .ant-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 @media (max-width: 991px) {
@@ -54,39 +55,30 @@
   }
 
   .header {
-    padding: 14px 20px;
+    padding: 0 20px;
   }
 }
 
 @media (max-width: 767px) {
-  .header {
-    min-height: 90px;
-    padding: 14px 16px;
-  }
-
   .content {
     padding: 15px;
   }
 
-  .logo {
-    font-size: 18px;
+  .header {
+    padding: 0 15px;
   }
 
-  .actionCard {
-    transform: none;
-  }
-
-  .actionCard:hover {
-    transform: none;
+  .actions {
+    grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 575px) {
-  .header {
-    padding: 12px 15px;
-  }
-
   .content {
     padding: 12px;
+  }
+
+  .header {
+    padding: 0 12px;
   }
 }
