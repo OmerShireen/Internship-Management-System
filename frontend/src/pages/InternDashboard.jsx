@@ -73,11 +73,15 @@ function InternDashboard() {
     } catch (error) {
       message.error(
         error.response?.data?.message ||
-          "Failed to update task status"
+        "Failed to update task status"
       )
     }
   }
-
+  const handleLogout = () => {
+    localStorage.removeItem("token")
+    localStorage.removeItem("user")
+    navigate("/")
+  }
   const totalTasks = tasks.length
 
   const completedTasks = tasks.filter(
@@ -198,7 +202,11 @@ function InternDashboard() {
     <div className={styles.container}>
       <div className={styles.header}>
         <div>
-          <Title level={2}>My Dashboard</Title>
+          <Title level={2}>My Dashboard
+            <Button onClick={handleLogout} className={styles.logoutbtn}>
+              Logout
+            </Button>
+          </Title>
 
           <Text type="secondary">
             Track your tasks and internship progress.

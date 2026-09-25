@@ -1,4 +1,5 @@
 import {
+  Button,
   Card,
   Col,
   Layout,
@@ -55,6 +56,7 @@ function AdminDashboard() {
       const tasks = tasksResponse.data.tasks || []
       const submissions = submissionsResponse.data.submissions || []
 
+
       const activeInterns = interns.filter(
         (intern) => intern.status === "active"
       ).length
@@ -78,11 +80,16 @@ function AdminDashboard() {
     } catch (error) {
       message.error(
         error.response?.data?.message ||
-          "Failed to load dashboard statistics"
+        "Failed to load dashboard statistics"
       )
     } finally {
       setLoading(false)
     }
+  }
+  const handleLogout = () => {
+    localStorage.removeItem("token")
+    localStorage.removeItem("user")
+    navigate("/")
   }
 
   useEffect(() => {
@@ -135,9 +142,13 @@ function AdminDashboard() {
         <Header className={styles.header}>
           <div>
             <Title level={3} className={styles.headerTitle}>
-              Admin Dashboard
+              Admin Dashboard           <Button onClick={handleLogout}  className= {styles.logoutbtn }>
+            Logout
+          </Button>
             </Title>
 
+
+         
             <Text type="secondary">
               Manage interns and track their progress
             </Text>

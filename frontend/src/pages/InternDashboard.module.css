@@ -5,8 +5,11 @@
 
 .header {
   margin-bottom: 25px;
+ 
 }
-
+.logoutbtn{
+  left: 25%;
+}
 .header h2 {
   margin-bottom: 5px;
 }
@@ -46,5 +49,7 @@
 @media (max-width: 575px) {
   .container {
     padding: 12px;
+  }.logoutbtn{
+    left: 15%;
   }
 }
