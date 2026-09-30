@@ -1,27 +1,27 @@
 import {
+  Avatar,
+  Button,
   Card,
   Col,
+  Descriptions,
   Progress,
   Row,
+  Select,
   Statistic,
   Table,
   Tag,
   Typography,
-  Button,
-  Select,
   message,
 } from "antd"
-
 import {
   CheckCircleOutlined,
   ClockCircleOutlined,
-  FileTextOutlined,
+  MailOutlined,
   SendOutlined,
+  UserOutlined,
 } from "@ant-design/icons"
-
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-
 import api from "../api/axios"
 import styles from "./InternDashboard.module.css"
 
@@ -30,37 +30,67 @@ const { Title, Text } = Typography
 function InternDashboard() {
   const navigate = useNavigate()
 
+  const [profile, setProfile] = useState(null)
   const [tasks, setTasks] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [loadingProfile, setLoadingProfile] = useState(true)
+  const [loadingTasks, setLoadingTasks] = useState(true)
+
+  const fetchProfile = async () => {
+    try {
+      setLoadingProfile(true)
+
+      const response = await api.get("/auth/profile")
+
+      setProfile(response.data.user)
+    } catch (error) {
+      message.error(
+        error.response?.data?.message ||
+          "Failed to fetch profile"
+      )
+    } finally {
+      setLoadingProfile(false)
+    }
+  }
 
   const fetchMyTasks = async () => {
     try {
-      setLoading(true)
+      setLoadingTasks(true)
 
       const response = await api.get("/tasks/my")
 
-      setTasks(response.data.tasks)
+      setTasks(response.data.tasks || [])
     } catch (error) {
       message.error(
-        error.response?.data?.message || "Failed to fetch tasks"
+        error.response?.data?.message ||
+          "Failed to fetch tasks"
       )
     } finally {
-      setLoading(false)
+      setLoadingTasks(false)
     }
   }
 
   useEffect(() => {
+    fetchProfile()
     fetchMyTasks()
   }, [])
 
+  const handleLogout = () => {
+    localStorage.removeItem("token")
+    localStorage.removeItem("user")
+
+    navigate("/")
+  }
+
   const handleStatusChange = async (taskId, status) => {
     try {
-      const response = await api.patch(`/tasks/${taskId}/status`, {
-        status,
-      })
+      const response = await api.patch(
+        `/tasks/${taskId}/status`,
+        { status }
+      )
 
       message.success(
-        response.data.message || "Task status updated successfully"
+        response.data.message ||
+          "Task status updated successfully"
       )
 
       setTasks((previousTasks) =>
@@ -73,15 +103,11 @@ function InternDashboard() {
     } catch (error) {
       message.error(
         error.response?.data?.message ||
-        "Failed to update task status"
+          "Failed to update task status"
       )
     }
   }
-  const handleLogout = () => {
-    localStorage.removeItem("token")
-    localStorage.removeItem("user")
-    navigate("/")
-  }
+
   const totalTasks = tasks.length
 
   const completedTasks = tasks.filter(
@@ -97,7 +123,9 @@ function InternDashboard() {
   const progressPercentage =
     totalTasks === 0
       ? 0
-      : Math.round((completedTasks / totalTasks) * 100)
+      : Math.round(
+          (completedTasks / totalTasks) * 100
+        )
 
   const getStatusColor = (status) => {
     if (status === "completed") return "green"
@@ -112,7 +140,6 @@ function InternDashboard() {
       dataIndex: "title",
       key: "title",
     },
-
     {
       title: "Description",
       dataIndex: "description",
@@ -123,7 +150,6 @@ function InternDashboard() {
         </Text>
       ),
     },
-
     {
       title: "Deadline",
       dataIndex: "deadline",
@@ -138,7 +164,6 @@ function InternDashboard() {
           }
         ),
     },
-
     {
       title: "Status",
       dataIndex: "status",
@@ -149,7 +174,6 @@ function InternDashboard() {
         </Tag>
       ),
     },
-
     {
       title: "Update Status",
       key: "updateStatus",
@@ -158,7 +182,10 @@ function InternDashboard() {
           value={record.status}
           style={{ width: 130 }}
           onChange={(status) =>
-            handleStatusChange(record._id, status)
+            handleStatusChange(
+              record._id,
+              status
+            )
           }
           options={[
             {
@@ -177,7 +204,6 @@ function InternDashboard() {
         />
       ),
     },
-
     {
       title: "Action",
       key: "action",
@@ -185,10 +211,14 @@ function InternDashboard() {
         <Button
           type="primary"
           icon={<SendOutlined />}
-          disabled={record.status === "completed"}
+          disabled={
+            record.status === "completed"
+          }
           onClick={() =>
             navigate("/submit-task", {
-              state: { taskId: record._id },
+              state: {
+                taskId: record._id,
+              },
             })
           }
         >
@@ -202,47 +232,120 @@ function InternDashboard() {
     <div className={styles.container}>
       <div className={styles.header}>
         <div>
-          <Title level={2}>My Dashboard
-            <Button onClick={handleLogout} className={styles.logoutbtn}>
+          <Title level={2}>
+            Intern Dashboard        <Button onClick={handleLogout} className={styles.logoutbtn}>
               Logout
             </Button>
           </Title>
 
           <Text type="secondary">
-            Track your tasks and internship progress.
+            Welcome back,{" "}
+            {profile?.name || "Intern"}
           </Text>
         </div>
+
+        
       </div>
+
+      <Card
+        className={styles.profileCard}
+        loading={loadingProfile}
+      >
+        <div className={styles.profileHeader}>
+          <Avatar
+            size={70}
+            icon={<UserOutlined />}
+          />
+
+          <div>
+            <Title
+              level={3}
+              className={styles.profileName}
+            >
+              {profile?.name || "N/A"}
+            </Title>
+
+            <Text type="secondary">
+              {profile?.email || "N/A"}
+            </Text>
+          </div>
+        </div>
+
+        <Descriptions
+          bordered
+          column={{
+            xs: 1,
+            sm: 2,
+            md: 2,
+          }}
+        >
+          <Descriptions.Item label="Email">
+            <MailOutlined />{" "}
+            {profile?.email || "N/A"}
+          </Descriptions.Item>
+
+          <Descriptions.Item label="Role">
+            <Tag color="blue">
+              {profile?.role?.toUpperCase() ||
+                "INTERN"}
+            </Tag>
+          </Descriptions.Item>
+
+          <Descriptions.Item label="University">
+            {profile?.university || "N/A"}
+          </Descriptions.Item>
+
+          <Descriptions.Item label="Department">
+            {profile?.department || "N/A"}
+          </Descriptions.Item>
+
+          <Descriptions.Item label="Status">
+            <Tag
+              color={
+                profile?.status === "active"
+                  ? "green"
+                  : "red"
+              }
+            >
+              {profile?.status?.toUpperCase() ||
+                "N/A"}
+            </Tag>
+          </Descriptions.Item>
+        </Descriptions>
+      </Card>
 
       <Row
         gutter={[20, 20]}
         className={styles.statistics}
       >
-        <Col xs={24} sm={12} lg={8}>
+        <Col xs={24} sm={8}>
           <Card>
             <Statistic
               title="Total Tasks"
               value={totalTasks}
-              prefix={<FileTextOutlined />}
+              loading={loadingTasks}
+              prefix={<ClockCircleOutlined />}
             />
           </Card>
         </Col>
 
-        <Col xs={24} sm={12} lg={8}>
+        <Col xs={24} sm={8}>
           <Card>
             <Statistic
               title="Completed Tasks"
               value={completedTasks}
+              loading={loadingTasks}
               prefix={<CheckCircleOutlined />}
             />
           </Card>
         </Col>
 
-        <Col xs={24} sm={12} lg={8}>
+        <Col xs={24} sm={8}>
           <Card>
             <Statistic
               title="Pending Tasks"
               value={pendingTasks}
+              loading={loadingTasks}
               prefix={<ClockCircleOutlined />}
             />
           </Card>
@@ -250,20 +353,27 @@ function InternDashboard() {
       </Row>
 
       <Card
-        title="My Progress"
+        title="Overall Progress"
         className={styles.progressCard}
       >
-        <Progress percent={progressPercentage} />
+        <Progress
+          percent={progressPercentage}
+          status={
+            progressPercentage === 100
+              ? "success"
+              : "active"
+          }
+        />
 
         <Text type="secondary">
-          You have completed {completedTasks} out of{" "}
-          {totalTasks} assigned tasks.
+          {completedTasks} of {totalTasks} tasks
+          completed
         </Text>
       </Card>
 
       <Card title="My Assigned Tasks">
         <Table
-          loading={loading}
+          loading={loadingTasks}
           columns={columns}
           dataSource={tasks}
           rowKey="_id"
